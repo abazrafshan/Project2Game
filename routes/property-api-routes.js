@@ -28,24 +28,6 @@ module.exports = function(app) {
     });
   });
 
-  // Property route for saving a new Property
-  app.Property("/api/property", function(req, res) {
-    db.Property.create(req.body).then(function(dbProperty) {
-      res.json(dbProperty);
-    });
-  });
-
-  // DELETE route for deleting property
-  app.delete("/api/property/:id", function(req, res) {
-    db.Property.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then(function(dbProperty) {
-      res.json(dbProperty);
-    });
-  });
-
   // PUT route for updating property
   app.put("/api/property", function(req, res) {
     db.Property.update(

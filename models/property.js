@@ -1,29 +1,29 @@
 module.exports = function(sequelize, DataTypes) {
     var Property = sequelize.define("Property", {
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1]
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        price: {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+        },
+        payout: {
+            type: DataTypes.DECIMAL,
+            allowNull: false
+        },
+        owned: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
-      },
-      price: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      owned: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: false
-      }
-      //other attr...
     },
     {
         freezeTableName: true,
     });
   
     Property.associate = function(models) {
-      Post.belongsTo(models.Player, {
+      Property.belongsTo(models.Player, {
         foreignKey: {
           allowNull: false
         }

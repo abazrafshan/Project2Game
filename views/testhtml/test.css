@@ -8,8 +8,18 @@
     height: 15%;
     padding: 0px !important; 
     margin: 0px !important;
+    max-height: 300px;
+    min-width: 300px;
 }
 
 .row, .nomargin {
     margin-bottom: 0 !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.card .cardcontent {
+    padding: 0px !important;
 }

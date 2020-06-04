@@ -21,25 +21,7 @@ module.exports = function(app) {
       res.json(dbPlayer);
     });
   });
-
-  //POST route
-  app.Property("/api/players", function(req, res) {
-    db.Player.create(req.body).then(function(dbPlayer) {
-      res.json(dbPlayer);
-    });
-  });
-
-  //DELETE route
-  app.delete("/api/players/:id", function(req, res) {
-    db.Player.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then(function(dbPlayer) {
-      res.json(dbPlayer);
-    });
-  });
-
+  
   // PUT route for updating a player
   app.put("/api/property", function(req, res) {
     db.Property.update(
@@ -52,4 +34,16 @@ module.exports = function(app) {
       res.json(dbProperty);
     });
   });
+
+  // //DELETE route
+  // app.delete("/api/players/:id", function(req, res) {
+  //   db.Player.destroy({
+  //     where: {
+  //       id: req.params.id
+  //     }
+  //   }).then(function(dbPlayer) {
+  //     res.json(dbPlayer);
+  //   });
+  // });
+
 };

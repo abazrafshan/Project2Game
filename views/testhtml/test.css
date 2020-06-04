@@ -1,6 +1,15 @@
+*{
+    padding: 0px !important; 
+    margin: 0px !important;
+}
+
 .card {
     width: 15%;
     height: 15%;
     padding: 0px !important; 
     margin: 0px !important;
+}
+
+.row, .nomargin {
+    margin-bottom: 0 !important;
 }

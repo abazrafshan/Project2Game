@@ -7,12 +7,12 @@ module.exports = function(sequelize, DataTypes) {
         cash: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            defaultValue: 1500
+            defaultValue: 1000
         },
         currentSpace: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: 1
         }
     });
   

@@ -5,12 +5,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         price: {
-            type: DataTypes.DECIMAL,
-            allowNull: false,
+            type: DataTypes.INTEGER,
         },
         payout: {
-            type: DataTypes.DECIMAL,
-            allowNull: false
+            type: DataTypes.INTEGER,
         },
         owned: {
             type: DataTypes.BOOLEAN,

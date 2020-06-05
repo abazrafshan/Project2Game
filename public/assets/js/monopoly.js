@@ -4,6 +4,12 @@ $(function() {
 
         // Update player's currentSpace
 
+        // Hide last space piece and show player's piece on new currentSpace
+        // preferred icon can maybe be chosen using pulldown menu?
+        // piece appended to each card image div
+        // let piece = $("<div>").html(`<a class="btn-floating halfway-fab red"><i class="material-icons">person</i></a>`);
+        // change style display depending on if player is on the card or not
+
         // Add current property's data-id, data-price, and data-owned to buy button so we can use them later
 
     })

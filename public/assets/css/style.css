@@ -1,0 +1,16 @@
+a {
+    text-align: center;
+}
+
+.card {
+    min-width: 190px;
+}
+
+.card-panel {
+    min-width: 180px;
+}
+
+.container-fluid {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

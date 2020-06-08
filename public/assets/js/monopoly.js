@@ -13,71 +13,125 @@ function rollDice() {
     }
 }
 
-
-
-
-
+// Document.ready
 $(function() {
+    var currentPlayerId = 1;
+    // alert("Player 1's turn!");
+
     $(".diceBtn").on("click", function(event) {
         // Produce random number
-     rollDice();   
+        let die1 = document.getElementById("die1");
+        let die2 = document.getElementById("die2");
+        let status = document.getElementById("status");
+        let d1 = Math.floor(Math.random() * 6) + 1;
+        let d2 = Math.floor(Math.random() * 6) + 1;
+        let diceTotal = d1 + d2;
+        die1.innerHTML = d1;
+        die2.innerHTML = d2;
+        status.innerHTML = "You rolled " + diceTotal + ".";
+        if (d1 === d2) {
+            status.innerHTML += " Doubles!"
+        }
 
-        // Update player's currentSpace
+        // Get player's currentSpace
+        $.ajax("/api/players/" + currentPlayerId, {
+            type: "GET"
+        }).then(function(playerResults) {
+            console.log(playerResults);
+            let playerSpace = playerResults.currentSpace;
+            let playerMoney = playerResults.money;
 
-        // Hide last space piece and show player's piece on new currentSpace
-        // preferred icon can maybe be chosen using pulldown menu?
-        // piece appended to each card image div
-        // let piece = $("<div>").html(`<a class="btn-floating halfway-fab red"><i class="material-icons">person</i></a>`);
-        // change style display depending on if player is on the card or not
-
-        // Add current property's data-id, data-price, and data-owned to buy button so we can use them later
-
-    })
-
-    
-
-    $(".buyBtn").on("click", function(event) {
-        // Get current player's ID and money ?
-        let playerid = 1;
-        let playerMoney = 1500;
-
-        // Get player's currentSpace and property info
-        let id = $(this).data("id");
-        let price = $(this).data("price");
-        let owned = $(this).data("owned");
-
-        if (owned===true) {
-            alert("This property is already owned!");
-        } else {
-            // Update owned state
-            let newOwned = {
-                owned: true
-            };
-
-            // Player's id as property's new foreignKey
-            let newForeignKey = {
-                foreignKey: 1
+            //Hide current space piece
+            let playerPieces = document.getElementsByClassName(`p` + currentPlayerId);
+            console.log(playerPieces);
+            for (var i=0; i<playerPieces.length; i++) {
+                console.log('hi')
+                console.log(playerSpace, playerPieces[i].dataset.id);
+                if (playerPieces[i].dataset.id == playerSpace) {
+                    console.log(playerPieces[i].dataset.id);
+                    playerPieces[i].style.display = "none";
+                }
             }
 
-            // Subtract property price from player's money
-            let newMoney = {
-                money: playerMoney - price
-            };
-            
-            // Update player's money
-            $.ajax("/api/players/" + playerid, {
-                type: "PUT",
-                data: newMoney
-            }).then(function() {
-                // Update property's owned state and foreignKey
+            //Update player space
+            playerSpace += diceTotal;
+            if (playerSpace > 16) {
+                // Player passed Go
+                playerSpace -= 16;
+
+                // Add property payouts to player's money
+                $.ajax("/api/property", {
+                    type: "GET"
+                }).then(function(propertyResults) {
+                    for (var i=0; i<propertyResults.length; i++) {
+                        if (propertyResults[i].foreignKey === currentPlayerId) {
+                            playerMoney += propertyResults[i].payout;
+                        };
+                    }
+                })
+            }
+
+            //Show player piece on new space
+            for (var i=0; i<playerPieces.length; i++) {
+                if (playerPieces[i].dataset.id == playerSpace) {
+                    playerPieces[i].style.display = "block";
+                }
+            }
+
+            $(".buyBtn").on("click", function(event) {
+                let id = $(this).data("id");
+                
                 $.ajax("/api/property/" + id, {
-                    type: "PUT",
-                    data: [newOwned, newForeignKey],
-                }).then(function() {
-                    // Reload the page to get the updated stats
-                    location.reload();
-                });
+                    type: "GET"
+                }).then(function(propertyResults) {
+                    let price = propertyResults.price;
+                    let owned = propertyResults.owned;
+
+                    if (owned===true) {
+                        alert("This property is already owned!");
+                    } else {
+                        // Update owned state
+                        let newOwned = {
+                            owned: true
+                        };
+            
+                        // Player's id as property's new foreignKey
+                        let newForeignKey = {
+                            foreignKey: currentPlayerId
+                        }
+            
+                        // Subtract property price from player's money
+                        let newMoney = {
+                            money: playerMoney - price
+                        };
+                        
+                        // Update player's money
+                        $.ajax("/api/players/" + currentPlayerId, {
+                            type: "PUT",
+                            data: newMoney
+                        }).then(function() {
+                            // Update property's owned state and foreignKey
+                            $.ajax("/api/property/" + id, {
+                                type: "PUT",
+                                data: [newOwned, newForeignKey],
+                            }).then(function() {
+                                // Reload the page to get the updated stats
+                                location.reload();
+                            });
+                        })
+                    }
+            
+                })
             })
-        }
+        
+            // Update player turn
+            if (currentPlayerId === 1) {
+                currentPlayerId = 2;
+            } else {
+                currentPlayerId = 1;
+            }
+        })
+
+        // alert(`Player ${currentPlayerId}'s turn!`);
     })
 })

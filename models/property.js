@@ -18,12 +18,14 @@ module.exports = function(sequelize, DataTypes) {
     },
     {
         freezeTableName: true,
+        timestamps: false
     });
   
     Property.associate = function(models) {
       Property.belongsTo(models.Player, {
         foreignKey: {
-          allowNull: false
+          allowNull: false,
+          defaultValue: 3
         }
       });
     };

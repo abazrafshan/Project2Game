@@ -40,4 +40,11 @@ module.exports = function(app) {
       res.json(dbProperty);
     });
   });
+
+  // POST route for creating a new property
+  app.post("/api/property", function(req, res) {
+    db.Property.create(req.body).then(function(dbProperty) {
+      res.json(dbProperty);
+    });
+  });
 };

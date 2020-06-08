@@ -29,12 +29,12 @@ module.exports = function(app) {
   });
 
   // PUT route for updating property
-  app.put("/api/property", function(req, res) {
+  app.put("/api/property/:id", function(req, res) {
     db.Property.update(
       req.body,
       {
         where: {
-          id: req.body.id
+          id: req.params.id
         }
       }).then(function(dbProperty) {
       res.json(dbProperty);

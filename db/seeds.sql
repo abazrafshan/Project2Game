@@ -1,6 +1,6 @@
 INSERT INTO players (name) VALUES ("Player 1");
 INSERT INTO players (name) VALUES ("Player 2");
-INSERT INTO players (name, cash) VALUES ("Bank", 1000000000);
+INSERT INTO players (name, money) VALUES ("Bank", 1000000000);
 
 INSERT INTO property (name, price, payout) VALUES ("Silver Ridge Ave", 100, 20);
 INSERT INTO property (name, price, payout) VALUES ("Hollywood Bowl", 120, 24);

@@ -23,12 +23,13 @@ module.exports = function(app) {
   });
   
   // PUT route for updating a player
-  app.put("/api/property", function(req, res) {
-    db.Property.update(
+  app.put("/api/players/:id", function(req, res) {
+    console.log(req.body)
+    db.Player.update(
       req.body,
       {
         where: {
-          id: req.body.id
+          id: req.params.id
         }
       }).then(function(dbProperty) {
       res.json(dbProperty);
@@ -36,7 +37,7 @@ module.exports = function(app) {
   });
 
   // POST route for creating a new player
-  app.post("/api/player", function(req, res) {
+  app.post("/api/players", function(req, res) {
     db.Player.create(req.body).then(function(dbPlayer) {
       res.json(dbPlayer);
     });

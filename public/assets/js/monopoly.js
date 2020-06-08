@@ -43,40 +43,44 @@ $(function() {
 
             //Hide current space piece
             let playerPieces = document.getElementsByClassName(`p` + currentPlayerId);
-            console.log(playerPieces);
             for (var i=0; i<playerPieces.length; i++) {
-                console.log('hi')
-                console.log(playerSpace, playerPieces[i].dataset.id);
                 if (playerPieces[i].dataset.id == playerSpace) {
-                    console.log(playerPieces[i].dataset.id);
                     playerPieces[i].style.display = "none";
                 }
             }
 
             //Update player space
             playerSpace += diceTotal;
-            if (playerSpace > 16) {
-                // Player passed Go
-                playerSpace -= 16;
 
-                // Add property payouts to player's money
-                $.ajax("/api/property", {
-                    type: "GET"
-                }).then(function(propertyResults) {
-                    for (var i=0; i<propertyResults.length; i++) {
-                        if (propertyResults[i].foreignKey === currentPlayerId) {
-                            playerMoney += propertyResults[i].payout;
-                        };
-                    }
-                })
-            }
+            // Account for passing GO
+            let newPlayerSpace = playerSpace>16 ? {currentSpace: playerSpace-16} : {currentSpace: playerSpace}
 
             //Show player piece on new space
             for (var i=0; i<playerPieces.length; i++) {
-                if (playerPieces[i].dataset.id == playerSpace) {
+                if (playerPieces[i].dataset.id == newPlayerSpace.currentSpace) {
                     playerPieces[i].style.display = "block";
                 }
             }
+
+            // Put method to update player's currentSpace
+            $.ajax({
+                type: "PUT",
+                data: newPlayerSpace,
+                url: "/api/players/" + currentPlayerId
+            }).then(function() {
+                if (playerSpace>16) {
+                    // Add property payouts to player's money
+                    $.ajax("/api/property", {
+                        type: "GET"
+                    }).then(function(propertyResults) {
+                        for (var i=0; i<propertyResults.length; i++) {
+                            if (propertyResults[i].foreignKey === currentPlayerId) {
+                                playerMoney += propertyResults[i].payout;
+                            };
+                        }
+                    })
+                }
+            });
 
             $(".buyBtn").on("click", function(event) {
                 let id = $(this).data("id");
@@ -84,6 +88,7 @@ $(function() {
                 $.ajax("/api/property/" + id, {
                     type: "GET"
                 }).then(function(propertyResults) {
+                    console.log(propertyResults);
                     let price = propertyResults.price;
                     let owned = propertyResults.owned;
 
@@ -106,32 +111,40 @@ $(function() {
                         };
                         
                         // Update player's money
-                        $.ajax("/api/players/" + currentPlayerId, {
+                        $.ajax({
                             type: "PUT",
-                            data: newMoney
+                            data: newMoney,
+                            url: "/api/players/" + currentPlayerId
                         }).then(function() {
                             // Update property's owned state and foreignKey
-                            $.ajax("/api/property/" + id, {
+                            $.ajax({
                                 type: "PUT",
                                 data: [newOwned, newForeignKey],
+                                url: "/api/property/" + id
                             }).then(function() {
-                                // Reload the page to get the updated stats
-                                location.reload();
+                                //Buy button disappear
+                                let buyButtons = document.getElementsByClassName("buyBtn");
+                                for (var i=0; i<buyButtons.length; i++) {
+                                    if (buyButtons[i].dataset.id == newPlayerSpace) {
+                                        buyButtons[i].style.display = "none";
+                                    }
+                                }
                             });
-                        })
+                        })  
                     }
             
                 })
+                // Update player turn
+                if (currentPlayerId === 1) {
+                    currentPlayerId = 2;
+                } else {
+                    currentPlayerId = 1;
+                }
             })
         
-            // Update player turn
-            if (currentPlayerId === 1) {
-                currentPlayerId = 2;
-            } else {
-                currentPlayerId = 1;
-            }
         })
 
-        // alert(`Player ${currentPlayerId}'s turn!`);
+        // End turn button on click
     })
+
 })

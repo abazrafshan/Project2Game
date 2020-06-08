@@ -1,6 +1,26 @@
+function rollDice() {
+    var die1 = document.getElementById("die1");
+    var die2 = document.getElementById("die2");
+    var status = document.getElementById("status");
+    var d1 = Math.floor(Math.random() * 6) + 1;
+    var d2 = Math.floor(Math.random() * 6) + 1;
+    var diceTotal = d1 + d2;
+    die1.innerHTML = d1;
+    die2.innerHTML = d2;
+    status.innerHTML = "You rolled " + diceTotal + ".";
+    if (d1 === d2) {
+        status.innerHTML += " Doubles!"
+    }
+}
+
+
+
+
+
 $(function() {
     $(".diceBtn").on("click", function(event) {
         // Produce random number
+     rollDice();   
 
         // Update player's currentSpace
 
@@ -13,6 +33,8 @@ $(function() {
         // Add current property's data-id, data-price, and data-owned to buy button so we can use them later
 
     })
+
+    
 
     $(".buyBtn").on("click", function(event) {
         // Get current player's ID and money ?

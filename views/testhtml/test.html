@@ -171,24 +171,16 @@
                   
                </div>
             </div>
-            <div class="col s1"></div>
-            <!--PLAYER 1 STATS-->
-            <div class="col s2">
-               <div class="card-panel green darken-2">
-                 <h6 class="white-text">Player 1 Stats</h6>
-                  <p class="white-text">Money: $</p>
-                  <p class="white-text">Number of Properties: </p>
-               </div>
-            </div>
-            <!--PLAYER 2 STATS-->
-            <div class="col s2">
-               <div class="card-panel green darken-2">
-                  <h6 class="white-text">Player 2 Stats</h6>
-                  <p class="white-text">Money: $</p>
-                  <p class="white-text">Number of Properties: </p>
-               </div>
-            </div>
-            <div class="col s1"></div>
+
+            <div class="col s6">
+               <div id="die1" class="dice">0</div>
+               <div id="die2" class="dice">0</div>
+               <!-- <button onclick = "rollDice()">Roll Dice</button> -->
+               <br>
+               <a class="btn btn-primary" onclick="rollDice()">Roll Dice</a>
+               <h2 id="status" style="clear: left;"></h2>
+
+           
             <div class="col s2" style="padding-left: 0px; padding-right: 0px;">
                <div class="card nomargin" style="width: 100%; margin-bottom: 0px; margin-top: 0px;">
                   <div class="card-image">
@@ -230,7 +222,27 @@
                   
                </div>
             </div>
-            <div class="col s6"></div>
+           
+               <div class="col s1"></div>
+            <!--PLAYER 1 STATS-->
+            <div class="col s2">
+               <div class="card-panel green darken-2">
+                 <h6 class="white-text">Player 1 Stats</h6>
+                  <p class="white-text">Money: $</p>
+                  <p class="white-text">Number of Properties: </p>
+               </div>
+            </div>
+            <!--PLAYER 2 STATS-->
+            <div class="col s2">
+               <div class="card-panel green darken-2">
+                  <h6 class="white-text">Player 2 Stats</h6>
+                  <p class="white-text">Money: $</p>
+                  <p class="white-text">Number of Properties: </p>
+               </div>
+
+            </div>
+            <div class="col s1"></div>
+           
             <div class="col s2" style="padding-left: 0px; padding-right: 0px;">
                <div class="card nomargin" style="width: 100%; margin-bottom: 0px; margin-top: 0px;">
                   <div class="card-image">
@@ -350,6 +362,26 @@
             </div>
          </div>
       </div>
-   </div>
+
+      </div>
+      <script>
+         function rollDice() {
+                             var die1 = document.getElementById("die1");
+                             var die2 = document.getElementById("die2");
+                             var status = document.getElementById("status");
+                             var d1 = Math.floor(Math.random() * 6) + 1;
+                             var d2 = Math.floor(Math.random() * 6) + 1;
+                             var diceTotal = d1 + d2;
+                             die1.innerHTML = d1;
+                             die2.innerHTML = d2;
+                             status.innerHTML = "You rolled " + diceTotal + ".";
+                             if (d1 === d2) {
+                      status.innerHTML += " Doubles!"
+                  }
+              }
+      </script>
+
+   
+
    </body>
 </html>

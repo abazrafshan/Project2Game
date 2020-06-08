@@ -2,6 +2,29 @@ a {
     text-align: center;
 }
 
+
+.col.s6{
+    text-align: center;
+}
+
+div.dice {
+    /* float: left; */
+    width: 32px;
+    background-color: #f5f5f5;
+    border: #999 1px solid;
+    font-size: 24px;
+    text-align: center;
+    margin: 5px;
+}
+
+.dice {
+    display: inline-block;
+    margin: 0 0.5rem;
+  
+    animation:shakeY; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 2s; /* don't forget to set a duration! */
+  }
+
 .card {
     min-width: 190px;
 }
@@ -14,3 +37,4 @@ a {
     padding-top: 20px;
     padding-bottom: 20px;
 }
+

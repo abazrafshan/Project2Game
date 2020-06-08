@@ -1,8 +1,7 @@
-INSERT INTO players (name, cash) VALUES ("Bank", 1000000000);
 INSERT INTO players (name) VALUES ("Player 1");
 INSERT INTO players (name) VALUES ("Player 2");
+INSERT INTO players (name, cash) VALUES ("Bank", 1000000000);
 
-INSERT INTO property (name) VALUES ("Collect Your Rent");
 INSERT INTO property (name, price, payout) VALUES ("Silver Ridge Ave", 100, 20);
 INSERT INTO property (name, price, payout) VALUES ("Hollywood Bowl", 120, 24);
 INSERT INTO property (name, price, payout) VALUES ("Glendower Avenue", 140, 28);
@@ -18,3 +17,4 @@ INSERT INTO property (name, price, payout) VALUES ("Getty Center", 320, 64);
 INSERT INTO property (name, price, payout) VALUES ("Dell Avenue", 340, 68);
 INSERT INTO property (name, price, payout) VALUES ("Santa Monica Pier", 360, 72);
 INSERT INTO property (name, price, payout) VALUES ("Murphy Way", 380, 76);
+INSERT INTO property (name) VALUES ("Collect Your Rent");

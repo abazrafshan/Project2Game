@@ -35,15 +35,11 @@ module.exports = function(app) {
     });
   });
 
-  // //DELETE route
-  // app.delete("/api/players/:id", function(req, res) {
-  //   db.Player.destroy({
-  //     where: {
-  //       id: req.params.id
-  //     }
-  //   }).then(function(dbPlayer) {
-  //     res.json(dbPlayer);
-  //   });
-  // });
+  // POST route for creating a new player
+  app.post("/api/player", function(req, res) {
+    db.Player.create(req.body).then(function(dbPlayer) {
+      res.json(dbPlayer);
+    });
+  });
 
 };

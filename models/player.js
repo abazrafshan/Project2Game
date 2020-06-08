@@ -4,16 +4,18 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false
         },
-        cash: {
+        money: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            defaultValue: 1000
+            defaultValue: 1500
         },
         currentSpace: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1
+            defaultValue: 16
         }
+    },
+    {timestamps: false
     });
   
     Player.associate = function(models) {

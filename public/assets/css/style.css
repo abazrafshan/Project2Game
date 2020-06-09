@@ -81,4 +81,7 @@ img {
     filter: brightness(120%);
 }
 
-
+h4 {
+    color: white;
+    font-family: 'Audiowide', cursive;
+}

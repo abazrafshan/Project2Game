@@ -1,22 +1,7 @@
-function rollDice() {
-    var die1 = document.getElementById("die1");
-    var die2 = document.getElementById("die2");
-    var status = document.getElementById("status");
-    var d1 = Math.floor(Math.random() * 6) + 1;
-    var d2 = Math.floor(Math.random() * 6) + 1;
-    var diceTotal = d1 + d2;
-    die1.innerHTML = d1;
-    die2.innerHTML = d2;
-    status.innerHTML = "You rolled " + diceTotal + ".";
-    if (d1 === d2) {
-        status.innerHTML += " Doubles!"
-    }
-}
-
 // Document.ready
 $(function() {
     var currentPlayerId = 1;
-    // alert("Player 1's turn!");
+    //Need div to append whose turn it is
 
     $(".diceBtn").on("click", function(event) {
         // Produce random number
@@ -37,13 +22,12 @@ $(function() {
         $.ajax("/api/players/" + currentPlayerId, {
             type: "GET"
         }).then(function(playerResults) {
-            console.log(playerResults);
             let playerSpace = playerResults.currentSpace;
             let playerMoney = playerResults.money;
 
             //Hide current space piece
             let playerPieces = document.getElementsByClassName(`p` + currentPlayerId);
-            for (var i=0; i<playerPieces.length; i++) {
+            for (let i=0; i<playerPieces.length; i++) {
                 if (playerPieces[i].dataset.id == playerSpace) {
                     playerPieces[i].style.display = "none";
                 }
@@ -53,11 +37,11 @@ $(function() {
             playerSpace += diceTotal;
 
             // Account for passing GO
-            let newPlayerSpace = playerSpace>16 ? {currentSpace: playerSpace-16} : {currentSpace: playerSpace}
+            let newPlayerSpace = playerSpace>16 ? playerSpace-16 : playerSpace
 
             //Show player piece on new space
-            for (var i=0; i<playerPieces.length; i++) {
-                if (playerPieces[i].dataset.id == newPlayerSpace.currentSpace) {
+            for (let i=0; i<playerPieces.length; i++) {
+                if (playerPieces[i].dataset.id == newPlayerSpace) {
                     playerPieces[i].style.display = "block";
                 }
             }
@@ -65,86 +49,89 @@ $(function() {
             // Put method to update player's currentSpace
             $.ajax({
                 type: "PUT",
-                data: newPlayerSpace,
+                data: {currentSpace: newPlayerSpace},
                 url: "/api/players/" + currentPlayerId
             }).then(function() {
+                // If passed Go, add property payouts to player's money
                 if (playerSpace>16) {
-                    // Add property payouts to player's money
                     $.ajax("/api/property", {
                         type: "GET"
                     }).then(function(propertyResults) {
-                        for (var i=0; i<propertyResults.length; i++) {
+                        for (let i=0; i<propertyResults.length; i++) {
                             if (propertyResults[i].foreignKey === currentPlayerId) {
                                 playerMoney += propertyResults[i].payout;
                             };
                         }
+                        //Update player's money
+                        $.ajax({
+                            type: "PUT",
+                            data: {money: playerMoney},
+                            url: "/api/players/" + currentPlayerId
+                        })
                     })
-                }
-            });
-
-            $(".buyBtn").on("click", function(event) {
-                let id = $(this).data("id");
+                };
                 
-                $.ajax("/api/property/" + id, {
-                    type: "GET"
-                }).then(function(propertyResults) {
-                    console.log(propertyResults);
-                    let price = propertyResults.price;
-                    let owned = propertyResults.owned;
+                // Pickpocketing if player lands on property where opponent's piece display is block
+                // or where current player's newPlayerSpace = opponent's currentSpace
+                
 
-                    if (owned===true) {
-                        alert("This property is already owned!");
+                // Need to change turns if property cannot be purchased
+
+
+                // End turn if don't want to purchase
+                $(".endTurn").on("click", function() {
+                    if (currentPlayerId === 1) {
+                        currentPlayerId = 2;
                     } else {
-                        // Update owned state
-                        let newOwned = {
-                            owned: true
-                        };
-            
-                        // Player's id as property's new foreignKey
-                        let newForeignKey = {
-                            foreignKey: currentPlayerId
-                        }
+                        currentPlayerId = 1;
+                    }
+                })
+
+                // If player decides to buy this property
+                $(".buyBtn").on("click", function(event) {
+                    let id = $(this).data("id");
+                    
+                    $.ajax("/api/property/" + id, {
+                        type: "GET"
+                    }).then(function(propertyResults) {
+                        let price = propertyResults.price;
             
                         // Subtract property price from player's money
-                        let newMoney = {
-                            money: playerMoney - price
-                        };
+                        let newMoney = playerMoney - price
                         
                         // Update player's money
                         $.ajax({
                             type: "PUT",
-                            data: newMoney,
+                            data: {money: newMoney},
                             url: "/api/players/" + currentPlayerId
                         }).then(function() {
                             // Update property's owned state and foreignKey
                             $.ajax({
                                 type: "PUT",
-                                data: [newOwned, newForeignKey],
+                                data: {owned: true, PlayerId: currentPlayerId},
                                 url: "/api/property/" + id
                             }).then(function() {
-                                //Buy button disappear
+                                //Buy button disappear for this property
                                 let buyButtons = document.getElementsByClassName("buyBtn");
-                                for (var i=0; i<buyButtons.length; i++) {
+                                for (let i=0; i<buyButtons.length; i++) {
                                     if (buyButtons[i].dataset.id == newPlayerSpace) {
                                         buyButtons[i].style.display = "none";
                                     }
                                 }
+                                // Update player turn
+                                if (currentPlayerId === 1) {
+                                    currentPlayerId = 2;
+                                } else {
+                                    currentPlayerId = 1;
+                                }
                             });
                         })  
-                    }
-            
+                    })
                 })
-                // Update player turn
-                if (currentPlayerId === 1) {
-                    currentPlayerId = 2;
-                } else {
-                    currentPlayerId = 1;
-                }
-            })
-        
+
+            });
         })
 
-        // End turn button on click
     })
 
 })

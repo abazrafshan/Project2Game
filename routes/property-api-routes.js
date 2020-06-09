@@ -23,7 +23,6 @@ module.exports = function(app) {
       },
       include: [db.Player]
     }).then(function(dbProperty) {
-      console.log(dbProperty);
       res.json(dbProperty);
     });
   });

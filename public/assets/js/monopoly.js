@@ -54,7 +54,7 @@ $(function() {
                 url: "/api/players/" + currentPlayerId
             }).then(function() {
                 // If passed Go, add property payouts to player's money
-                if (playerSpace>16) {
+                if (playerSpace>=16) {
                     $.ajax("/api/property", {
                         type: "GET"
                     }).then(function(propertyResults) {

@@ -16,12 +16,10 @@ As a player, I want to play a board game where I purchase properties as investme
   
 ## Table of Contents
 * [Install](#install)
-* [Usage](#usage)
 * [License](#license)
-* [Contributing](#contributing)
-* [Tests](#tests)
 * [Questions](#questions)
 * [Links](#links)
+* [Screenshot](#screenshot)
   
 ## Install
   
@@ -45,3 +43,6 @@ If you have any questions about the repo, open an issue or contact [abazrafshan]
 
 Link to Github repo: (https://github.com/abazrafshan/Project2Game)
   
+## Screenshot
+
+![city-skyline-during-night-time-804915](https://user-images.githubusercontent.com/63271368/84208650-10e5b900-aa69-11ea-9061-e9cebf6806a2.png)

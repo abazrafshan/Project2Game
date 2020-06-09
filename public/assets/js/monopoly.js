@@ -1,9 +1,10 @@
 // Document.ready
 $(function() {
     var currentPlayerId = 1;
-    //Need div to append whose turn it is
+    //Indicate turn
+    $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
 
-    $(".diceBtn").on("click", function(event) {
+    $(".diceBtn").off().on("click", function(event) {
         // Produce random number
         let die1 = document.getElementById("die1");
         let die2 = document.getElementById("die2");
@@ -58,8 +59,9 @@ $(function() {
                         type: "GET"
                     }).then(function(propertyResults) {
                         for (let i=0; i<propertyResults.length; i++) {
-                            if (propertyResults[i].foreignKey === currentPlayerId) {
-                                playerMoney += propertyResults[i].payout;
+                            if (propertyResults[i].PlayerId === currentPlayerId) {
+                                playerMoney = parseInt(playerMoney);
+                                playerMoney += parseInt(propertyResults[i].payout);
                             };
                         }
                         //Update player's money
@@ -67,28 +69,76 @@ $(function() {
                             type: "PUT",
                             data: {money: playerMoney},
                             url: "/api/players/" + currentPlayerId
+                        }).then(function() {
+                            //Update money in stats
+                            $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
                         })
                     })
                 };
-                
-                // Pickpocketing if player lands on property where opponent's piece display is block
-                // or where current player's newPlayerSpace = opponent's currentSpace
-                
 
                 // Need to change turns if property cannot be purchased
+                let buyButtons = document.getElementsByClassName("buyBtn");
+                for (let i=0; i<buyButtons.length; i++) {
+                    if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none") {
+                        if (currentPlayerId === 1) {
+                            currentPlayerId = 2;
+                        } else {
+                            currentPlayerId = 1;
+                        }
+                        console.log(currentPlayerId);
+                        $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
+                    }
+                }
+                
+                // Pickpocketing if player lands on property opponent is on
+                let opponentId = currentPlayerId == 1 ? 2 : 1;
+                let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
+                for (let i=0; i<opponentPieces.length; i++){
+                    if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
+                        //get request for opponent's money
+                        $.ajax("/api/players/" + opponentId, {
+                            type: "GET",
+                        }).then(function(opponentResults) {
+                            let oppMoney = opponentResults.money;
+                            let stolenAmt = 0.1 * oppMoney;
 
+                            oppMoney -= stolenAmt;
+                            playerMoney += stolenAmt;
+
+                            //Update opponent's money
+                            $.ajax({
+                                type: "PUT",
+                                data: {money: oppMoney},
+                                url: "/api/players/" + opponentId
+                            })
+                            //Update player's money
+                            $.ajax({
+                                type: "PUT",
+                                data: {money: playerMoney},
+                                url: "/api/players/" + currentPlayerId
+                            })
+
+                            //Update money in stats
+                            $(`#money${opponentId}`).text(`Money: $${oppMoney}`);
+                            $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
+                        })
+                       
+                    }
+                }
 
                 // End turn if don't want to purchase
-                $(".endTurn").on("click", function() {
+                $(".endTurn").off().on("click", function() {
                     if (currentPlayerId === 1) {
                         currentPlayerId = 2;
                     } else {
                         currentPlayerId = 1;
                     }
+                    console.log(currentPlayerId);
+                    $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
                 })
 
                 // If player decides to buy this property
-                $(".buyBtn").on("click", function(event) {
+                $(".buyBtn").off().on("click", function(event) {
                     let id = $(this).data("id");
                     
                     $.ajax("/api/property/" + id, {
@@ -112,22 +162,40 @@ $(function() {
                                 url: "/api/property/" + id
                             }).then(function() {
                                 //Buy button disappear for this property
-                                let buyButtons = document.getElementsByClassName("buyBtn");
                                 for (let i=0; i<buyButtons.length; i++) {
                                     if (buyButtons[i].dataset.id == newPlayerSpace) {
                                         buyButtons[i].style.display = "none";
                                     }
                                 }
-                                // Update player turn
-                                if (currentPlayerId === 1) {
-                                    currentPlayerId = 2;
-                                } else {
-                                    currentPlayerId = 1;
-                                }
+                                // Get properties and count number owned by player
+                                $.ajax("/api/property", {
+                                    type: "GET"
+                                }).then(function(propResults) {
+                                    let count = 0;
+                                    for (let i=0; i<propResults.length; i++) {
+                                        if (propResults[i].PlayerId == currentPlayerId) {
+                                            count += 1;
+                                        }
+                                    }
+                                    $(`#money${currentPlayerId}`).text(`Money: $${newMoney}`);
+                                    $(`#prop${currentPlayerId}`).text(`Number of Properties: ${count}`);
+
+                                    // Update player turn
+                                    if (currentPlayerId === 1) {
+                                        currentPlayerId = 2;
+                                    } else {
+                                        currentPlayerId = 1;
+                                    }
+                                    console.log(currentPlayerId);
+                                    $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
+                                })
                             });
                         })  
                     })
+                    return false;
                 })
+
+                
 
             });
         })

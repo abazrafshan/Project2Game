@@ -2,10 +2,10 @@ body.first{
     background-color: black;
 }
 .container-first{
-    max-width: 800px;
+    max-width: 650px;
     text-align: center;
     margin: 0 auto;
-    margin-top: 100px;
+    margin-top: 10px;
 }
 
 .ml9 {
@@ -130,10 +130,18 @@ footer {
 }
 h6 {
  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
- color: darkgrey;
+ color: white;
+ font-weight: 800;
 }
 
 body.first{
   background-image: url(https://images.pexels.com/photos/1040499/pexels-photo-1040499.jpeg?cs=srgb&dl=abstract-art-black-background-blur-1040499.jpg&fm=jpg);
   background-size: cover;
+}
+ol {
+  justify-content: center;
+  text-align: left;
+  color: white;
+  font-family: 'Audiowide', cursive;
+  font-size: 13px;
 }

@@ -24,7 +24,6 @@ module.exports = function(app) {
   
   // PUT route for updating a player
   app.put("/api/players/:id", function(req, res) {
-    console.log(req.body)
     db.Player.update(
       req.body,
       {

@@ -1,5 +1,7 @@
 a {
     text-align: center;
+    z-index: 1 !important;
+    position: relative !important;
 }
 
 
@@ -72,4 +74,11 @@ h6 {
     box-shadow: 0 0 15px #d35400;
     filter: blur(3px);
   }
+
+img {
+    height: 120px;
+    width: 80%;
+    filter: brightness(120%);
+}
+
 

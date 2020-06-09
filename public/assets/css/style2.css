@@ -133,4 +133,7 @@ h6 {
  color: darkgrey;
 }
 
-  
+body.first{
+  background-image: url(https://images.pexels.com/photos/1040499/pexels-photo-1040499.jpeg?cs=srgb&dl=abstract-art-black-background-blur-1040499.jpg&fm=jpg);
+  background-size: cover;
+}

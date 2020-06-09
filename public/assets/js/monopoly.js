@@ -214,7 +214,7 @@ $(function() {
                                     let cards = document.getElementsByClassName("card");
                                     for (let i=0; i<cards.length; i++) {
                                         if (cards[i].getAttribute("data-id") == id) {
-                                            cards[i].style.border = `1px solid ${currentPlayerId == 1 ? "red" : "blue"}`;
+                                            cards[i].style.border = `2px solid ${currentPlayerId == 1 ? "red" : "blue"}`;
                                         }
                                     }
 

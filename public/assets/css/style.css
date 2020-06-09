@@ -48,3 +48,10 @@ div.dice {
     /* transform: rotateX(45deg); */
     background-image: url(https://images.pexels.com/photos/804915/pexels-photo-804915.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260);
   }
+
+p {
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6, 0 0 25px #0073e6, 0 0 30px #0073e6, 0 0 35px #0073e6;
+}

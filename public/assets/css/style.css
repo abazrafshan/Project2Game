@@ -8,6 +8,7 @@ a {
 
 .card {
     min-width: 190px;
+    min-height: 239px;
 }
 
 .card-panel {

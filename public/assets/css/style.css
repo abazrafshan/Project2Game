@@ -18,10 +18,8 @@ a {
 .container-fluid {
     padding-top: 20px;
     padding-bottom: 20px;
-    /* transform: rotateX(45deg); */
 }
 div.dice {
-    /* float: left; */
     width: 32px;
     background-color: #f5f5f5;
     border: #999 1px solid;
@@ -32,25 +30,13 @@ div.dice {
 
 .dice {
     display: inline-block;
-    /* margin: auto; */
-    
     animation:shakeY; /* referring directly to the animation's @keyframe declaration */
     animation-duration: 2s; /* don't forget to set a duration! */
   }
 
-  .col.s4 {
-      /* justify-content: center; */
-      text-align: center;
-  }
-
-  /* .card.nomargin {
-      width: 70%;
-  } */
-
-  body {
-    /* transform: rotateX(45deg); */
-    /* background-image: url(https://images.pexels.com/photos/804915/pexels-photo-804915.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260); */
-  }
+.col.s4 {
+    text-align: center;
+}
 
 p {
     font-size: 12px;
@@ -62,7 +48,6 @@ p {
 h6 {
     color: #ffa502;
     text-align: center;
-    /* box-shadow: 0 0 15px #d35400; */
     text-shadow: 0 0 15px #d35400;
 }
 .diceBtn:hover {

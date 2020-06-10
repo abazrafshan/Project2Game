@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "Kim$oohyun00",
+    "password": "root",
     "database": "theRealMonopoly_db",
     "host": "127.0.0.1",
     "dialect": "mysql",
@@ -16,11 +16,11 @@
     "operatorsAliases": false
   },
   "production": {
-    "username": "root",
-    "password": "root",
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "use_env_variable": "JAWSDB_URL",
+    "username": "MYSQL_USERNAME",
+    "password": "MYSQL_PASSWORD",
+    "database": "MYSQL_DATABASE",
+    "host": "MYSQL_HOST",
+    "dialect": "mysql"
   }
 }

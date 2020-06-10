@@ -229,7 +229,7 @@ $(function() {
                                             console.log(endCount);
                                         }
                                     }
-                                    if (endCount == 2) {
+                                    if (endCount == 15) {
                                         endGame();
                                     }
                                 })

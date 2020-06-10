@@ -71,7 +71,6 @@ $(function() {
                             url: "/api/players/" + currentPlayerId
                         }).then(function() {
                             //Update money in stats
-                            console.log(playerMoney);
                             $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
                         })
                     })
@@ -92,7 +91,6 @@ $(function() {
                             url: "/api/players/" + currentPlayerId
                         }).then(function() {
                             //Update money in stats
-                            console.log(playerMoney);
                             $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
                             
                             if (currentPlayerId === 1) {
@@ -136,10 +134,6 @@ $(function() {
                             //Update money in stats
                             $(`#money${opponentId}`).text(`Money: $${oppMoney}`);
                             $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
-                            console.log(`Me: ${playerMoney}`);
-                            console.log(`Opp: ${oppMoney}`);
-
-
                         })
                        
                     }
@@ -154,7 +148,6 @@ $(function() {
                         } else {
                             currentPlayerId = 1;
                         }
-                        console.log(currentPlayerId);
                         $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
                     }
                 }
@@ -166,7 +159,6 @@ $(function() {
                     } else {
                         currentPlayerId = 1;
                     }
-                    console.log(currentPlayerId);
                     $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
                 })
 
@@ -220,7 +212,6 @@ $(function() {
 
                                     $(`#money${currentPlayerId}`).text(`Money: $${newMoney}`);
                                     $(`#prop${currentPlayerId}`).text(`Number of Properties: ${count}`);
-                                    console.log(newMoney);
 
                                     // Update player turn
                                     if (currentPlayerId === 1) {
@@ -228,8 +219,19 @@ $(function() {
                                     } else {
                                         currentPlayerId = 1;
                                     }
-                                    console.log(currentPlayerId);
                                     $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
+                                    
+                                    // End game if all properties sold
+                                    let endCount = 0;
+                                    for (let i=0; i<buyButtons.length; i++) {
+                                        if (buyButtons[i].style.display == "none") {
+                                            endCount += 1;
+                                            console.log(endCount);
+                                        }
+                                    }
+                                    if (endCount == 2) {
+                                        endGame();
+                                    }
                                 })
                             });
                         })  
@@ -240,59 +242,62 @@ $(function() {
 
     })
 
-    // function pickpocket(currentPlayerId, playerMoney) {
-    //     let opponentId = currentPlayerId == 1 ? 2 : 1;
-    //     let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
-    //     for (let i=0; i<opponentPieces.length; i++){
-    //         if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
-    //             //get request for opponent's money
-    //             $.ajax("/api/players/" + opponentId, {
-    //                 type: "GET",
-    //             }).then(function(opponentResults) {
-    //                 let oppMoney = parseInt(opponentResults.money);
-    //                 let stolenAmt = 0.1 * oppMoney;
-    //                 playerMoney = parseInt(playerMoney);
-    //                 oppMoney -= parseInt(stolenAmt);
-    //                 playerMoney += parseInt(stolenAmt);
+    //End game
+    function endGame() {
+        $("#turn").html("<h4>Game Over!</h4>");
+        $(".endTurn").text("Play Again");
+        $(".endTurn").addClass("endBtn");
 
-    //                 //Update opponent's money
-    //                 $.ajax({
-    //                     type: "PUT",
-    //                     data: {money: oppMoney},
-    //                     url: "/api/players/" + opponentId
-    //                 })
-    //                 //Update player's money
-    //                 $.ajax({
-    //                     type: "PUT",
-    //                     data: {money: playerMoney},
-    //                     url: "/api/players/" + currentPlayerId
-    //                 })
+        //Button to play again
+        $(".endBtn").on("click", function(event) {
+            location.reload();
+        });
 
-    //                 //Update money in stats
-    //                 $(`#money${opponentId}`).text(`Money: $${oppMoney}`);
-    //                 $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
-    //                 console.log(`Me: ${playerMoney}`);
-    //                 console.log(`Opp: ${oppMoney}`);
+        //Display final stats and winner
+        $.ajax("/api/property", {
+            type: "GET"
+        }).then(function(propertyResults) {
+            console.log(propertyResults);
+            let money1 = 0;
+            let money2 = 0;
 
+            for (let i=0; i<propertyResults.length; i++) {
+                if (propertyResults[i].PlayerId == 1) {
+                    money1 += parseInt(propertyResults[i].price);
+                } else if (propertyResults[i].PlayerId == 2) {
+                    money2 += parseInt(propertyResults[i].price);
+                }
+            }
 
-    //             })
-                
-    //         }
-    //     }
-    // }
-    // function propUnavailable(currentPlayerId) {
-    //     let buyButtons = document.getElementsByClassName("buyBtn");
-    //     for (let i=0; i<buyButtons.length; i++) {
-    //         if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none") {
-    //             if (currentPlayerId === 1) {
-    //                 currentPlayerId = 2;
-    //             } else {
-    //                 currentPlayerId = 1;
-    //             }
-    //             console.log(currentPlayerId);
-    //             $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
-    //         }
-    //     }
-    // }
+            $.ajax("/api/players", {
+                type: "GET"
+            }).then(function(playerResults) {
+                console.log(playerResults);
+                money1 += parseInt(playerResults[0].money);
+                money2 += parseInt(playerResults[1].money);
+
+                if (money1 > money2) {
+                    status1 = "WIN";
+                    status2 = "LOSS";
+                } else if (money1 == money2) {
+                    status1 = "TIE";
+                    status2 = "TIE";
+                } else {
+                    status1 = "LOSS";
+                    status2 = "WIN";
+                }
+
+                //Show final net worth for both players
+                $(`#money1`).text(`Net Worth: $${money1}`);
+                $(`#money2`).text(`Net Worth: $${money2}`);
+                $(`#prop1`).text(`Result: ${status1}`);
+                $(`#prop2`).text(`Result: ${status2}`);
+            })
+
+        })
+
+    }
+
 
 })
+               

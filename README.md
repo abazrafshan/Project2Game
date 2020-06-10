@@ -1,6 +1,6 @@
-# Real Monopoly
-  
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Real Monopoly
+https://thieves-monopoly.herokuapp.com/
 
 ## Description
 
@@ -20,17 +20,7 @@ As a player, I want to play a board game where I purchase properties as investme
 * [Questions](#questions)
 * [Links](#links)
 * [Screenshot](#screenshot)
-  
-## Install
-  
-Install dependencies for this application by running command:
-  
-    npm install
-  
-## Usage
-  
-na
-  
+   
 ## License
   
 Project is licensed under the following: MIT

@@ -247,6 +247,7 @@ $(function() {
         $("#turn").html("<h4>Game Over!</h4>");
         $(".endTurn").text("Play Again");
         $(".endTurn").addClass("endBtn");
+        $(".endBtn").removeClass("endTurn");
 
         //Button to play again
         $(".endBtn").on("click", function(event) {

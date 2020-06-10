@@ -7,10 +7,10 @@ module.exports = function(app) {
     })
     app.get("/game", function(req, res) {
         db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-        db.sequelize.query('DELETE FROM Players WHERE ID > 0');
-        db.sequelize.query('ALTER TABLE Players AUTO_INCREMENT = 1');
         db.sequelize.query('DELETE FROM Property WHERE ID > 0');
         db.sequelize.query('ALTER TABLE Property AUTO_INCREMENT = 1');
+        db.sequelize.query('DELETE FROM Players WHERE ID > 0');
+        db.sequelize.query('ALTER TABLE Players AUTO_INCREMENT = 1');
         // db.sequelize.query('TRUNCATE TABLE Property CASCADE'); 
         // db.sequelize.query('TRUNCATE TABLE Players CASCADE');
         db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');

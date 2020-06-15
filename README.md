@@ -3,6 +3,7 @@
 # Real Monopoly
 
 https://tranquil-castle-93328.herokuapp.com
+https://morning-earth-32122.herokuapp.com
 
 ## Description
 

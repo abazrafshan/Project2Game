@@ -33,6 +33,6 @@ module.exports = function(app) {
             db.sequelize.query('INSERT INTO Property (name, price, payout) VALUES ("Murphy Way", 380, 76)');
             db.sequelize.query('INSERT INTO Property (name) VALUES ("Collect Your Rent")');
         })
-        res.render("index");
+        res.sendFile(path.join(__dirname, "../public/game.html"));
     })
 }

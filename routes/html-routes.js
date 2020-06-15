@@ -6,16 +6,17 @@ module.exports = function(app) {
         res.sendFile(path.join(__dirname, "../public/index.html"));
     })
     app.get("/game", function(req, res) {
-        db.sequelize.sync({force:true}).then(function() {
-            db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-            db.sequelize.query('DELETE FROM Property WHERE ID > 0');
-            db.sequelize.query('ALTER TABLE Property AUTO_INCREMENT = 1');
-            db.sequelize.query('DELETE FROM Players WHERE ID > 0');
-            db.sequelize.query('ALTER TABLE Players AUTO_INCREMENT = 1');
-            db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-            db.sequelize.query('INSERT INTO Players (name) VALUES ("Player 1")');
-            db.sequelize.query('INSERT INTO Players (name) VALUES ("Player 2")');
-            db.sequelize.query('INSERT INTO Players (name, money) VALUES ("Bank", 1000000000)');
+        db.sequelize.sync({force:true}).then(async function() {
+            await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+            await db.sequelize.query('DELETE FROM Property WHERE ID > 0');
+            await db.sequelize.query('ALTER TABLE Property AUTO_INCREMENT = 1');
+            await db.sequelize.query('DELETE FROM Players WHERE ID > 0');
+            await db.sequelize.query('ALTER TABLE Players AUTO_INCREMENT = 1');
+            await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+            await db.sequelize.query('INSERT INTO Players (name) VALUES ("Player 1")');
+            await db.sequelize.query('INSERT INTO Players (name) VALUES ("Player 2")');
+            await db.sequelize.query('INSERT INTO Players (name, money) VALUES ("Bank", 1000000000)');
+
             db.sequelize.query('INSERT INTO Property (name, price, payout) VALUES ("Silver Ridge Ave", 100, 20)');
             db.sequelize.query('INSERT INTO Property (name, price, payout) VALUES ("Hollywood Bowl", 120, 24)');
             db.sequelize.query('INSERT INTO Property (name, price, payout) VALUES ("Glendower Avenue", 140, 28)');

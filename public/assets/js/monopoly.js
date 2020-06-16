@@ -92,8 +92,7 @@ $(function() {
                         }).then(function() {
                             //Update money in stats
                             $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
-                            
-                            $(".endTurn").trigger("click");                           
+                            $(".endTurn").click();              
                         })
                     })
                 }
@@ -104,17 +103,17 @@ $(function() {
                 let opponentId = currentPlayerId === 1 ? 2 : 1;
                 let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
                 for (let i=0; i<buyButtons.length; i++) {
-                    if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
+                    if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "none" && buyButtons[i].style.display == "none") {
+                        $(".endTurn").click();
+                    }
+                    else if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
                         console.log(currentPlayerId);
                         pickpocket()
                         if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none") {
                             console.log("end turn");
-                            $(".endTurn").trigger("click");
-                        }  
-                    }
-                    else if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none") {
-                        $(".endTurn").trigger("click");
-                    }
+                            $(".endTurn").click();
+                        }
+                    } 
                 }
 
                 // End turn if don't want to purchase
@@ -208,14 +207,13 @@ $(function() {
 
         //Pickpocket
         function pickpocket() {
-            currentPlayerId = currentPlayerId === 1 ? 2 : 1;
             $.ajax("/api/players/" + currentPlayerId, {
                 type: "GET"
             }).then(function(playerRes) {
                 let playerMoney = parseInt(playerRes.money);
     
                 let opponentId = currentPlayerId === 1 ? 2 : 1;
-                console.log(`${currentPlayerId} pickpocketed ${opponentId}!`);
+                console.log(`Player ${currentPlayerId} pickpocketed Player ${opponentId}!`);
         
                 //Get request for opponent's money
                 $.ajax("/api/players/" + opponentId, {
@@ -243,6 +241,9 @@ $(function() {
                     //Update money in stats
                     $(`#money${opponentId}`).text(`Money: $${oppMoney}`);
                     $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
+
+                    let buyButtons = document.getElementsByClassName("buyBtn");
+
                 })
             })
         }

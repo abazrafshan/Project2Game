@@ -75,7 +75,6 @@ $(function() {
                         })
                     })
                 } else if (newPlayerSpace == 16) {
-                    console.log("on GO!");
                     $.ajax("/api/property", {
                         type: "GET"
                     }).then(function(propertyResults) {
@@ -85,7 +84,6 @@ $(function() {
                                 playerMoney += parseInt(propertyResults[i].payout);
                             };
                         }
-                        console.log(playerMoney);
                         //Update player's money
                         $.ajax({
                             type: "PUT",

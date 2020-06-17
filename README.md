@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Real Monopoly
+# Thieves Monopoly
 
 https://morning-earth-32122.herokuapp.com
 

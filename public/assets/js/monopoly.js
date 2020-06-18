@@ -135,7 +135,6 @@ $(function() {
                     }
                 }
 
-
                 // End turn if don't want to purchase
                 $(".endTurn").off().on("click", function() {
                     if (currentPlayerId === 1) {
@@ -231,10 +230,8 @@ $(function() {
                 type: "GET"
             }).then(function(playerRes) {
                 let playerMoney = parseInt(playerRes.money);
-                let playerSpace = playerRes.currentSpace;
     
                 let opponentId = currentPlayerId === 1 ? 2 : 1;
-                
                 //Get request for opponent's money
                 $.ajax("/api/players/" + opponentId, {
                     type: "GET",

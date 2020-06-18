@@ -1,4 +1,5 @@
 var express = require("express");
+var compression = require("compression");
 
 // Sets up the Express App
 var app = express();
@@ -11,6 +12,7 @@ var db = require("./models");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(compression());
 // Static directory
 app.use(express.static("public"));
 

@@ -1,7 +1,7 @@
 {
   "name": "project2game",
   "version": "1.0.0",
-  "description": "",
+  "description": "virtual board game adopting rules similar to monopoly and tag",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/abazrafshan/Project2Game#readme",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
     "mysql2": "^2.1.0",

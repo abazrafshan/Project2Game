@@ -4,8 +4,6 @@
 
 https://morning-earth-32122.herokuapp.com
 
-(https://tranquil-castle-93328.herokuapp.com)
-
 ## Description
 
 This application was designed to provide people with an additional entertainment resource to enjoy.

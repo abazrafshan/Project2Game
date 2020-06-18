@@ -35,7 +35,7 @@ $(function() {
             }
 
             //Update player space
-            let newPlayerSpace = playerSpace += diceTotal;
+            let newPlayerSpace = playerSpace + diceTotal;
 
             // Account for passing GO
             newPlayerSpace = newPlayerSpace>16 ? newPlayerSpace-16 : newPlayerSpace;
@@ -53,8 +53,9 @@ $(function() {
                 data: {currentSpace: newPlayerSpace},
                 url: "/api/players/" + currentPlayerId
             }).then(function() {
-                // If they weren't already on Go and they passed Go, add property payouts to player's money
-                if (playerSpace !== 16 && (newPlayerSpace < playerSpace)) {
+                // Player lands on Go, collect payouts
+                if (newPlayerSpace === 16) {
+                    console.log(`Player ${currentPlayerId} landed on Go!`);
                     $.ajax("/api/property", {
                         type: "GET"
                     }).then(function(propertyResults) {
@@ -72,49 +73,68 @@ $(function() {
                         }).then(function() {
                             //Update money in stats
                             $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
-                        })
-                    })
-                } else if (newPlayerSpace == 16) {
-                    $.ajax("/api/property", {
-                        type: "GET"
-                    }).then(function(propertyResults) {
-                        for (let i=0; i<propertyResults.length; i++) {
-                            if (propertyResults[i].PlayerId === currentPlayerId) {
-                                playerMoney = parseInt(playerMoney);
-                                playerMoney += parseInt(propertyResults[i].payout);
-                            };
-                        }
-                        //Update player's money
-                        $.ajax({
-                            type: "PUT",
-                            data: {money: playerMoney},
-                            url: "/api/players/" + currentPlayerId
-                        }).then(function() {
-                            //Update money in stats
-                            $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
+                            //End turn
                             $(".endTurn").click();              
                         })
                     })
                 }
+                // If they weren't already on Go and they passed Go, receive payouts
+                else if (playerSpace < 16 && newPlayerSpace < playerSpace) {
+                    console.log(`Player ${currentPlayerId} passed Go!`);
+                    $.ajax("/api/property", {
+                        type: "GET"
+                    }).then(function(propertyResults) {
+                        for (let i=0; i<propertyResults.length; i++) {
+                            if (propertyResults[i].PlayerId === currentPlayerId) {
+                                playerMoney = parseInt(playerMoney);
+                                playerMoney += parseInt(propertyResults[i].payout);
+                            };
+                        }
+                        //Update player's money
+                        $.ajax({
+                            type: "PUT",
+                            data: {money: playerMoney},
+                            url: "/api/players/" + currentPlayerId
+                        }).then(function() {
+                            //Update money in stats
+                            $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
 
-                // Pickpocketing if player lands on property opponent is on
-                // Need to change turns if property cannot be purchased
-                let buyButtons = document.getElementsByClassName("buyBtn");
-                let opponentId = currentPlayerId === 1 ? 2 : 1;
-                let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
-                for (let i=0; i<buyButtons.length; i++) {
-                    if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "none" && buyButtons[i].style.display == "none") {
-                        $(".endTurn").click();
-                    }
-                    else if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
-                        console.log(currentPlayerId);
-                        pickpocket()
-                        if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none") {
-                            console.log("end turn");
+                            //---HERE ON, SAME AS THE "ELSE" BELOW
+                            // If landed on an unavailable property
+                            let buyButtons = document.getElementsByClassName("buyBtn");
+                            let opponentId = currentPlayerId === 1 ? 2 : 1;
+                            let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
+                            for (let i=0; i<opponentPieces.length-1; i++) {
+                                // If property unavailable
+                                if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none" && opponentPieces[i].style.display == "none") {
+                                    $(".endTurn").click();
+                                }
+                                // Pickpocket
+                                else if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
+                                    pickpocket()
+                                } 
+                            }
+                        })
+                    })  
+                }
+                // Didn't pass Go
+                else {
+                    console.log(`Player ${currentPlayerId} moved!`);
+                    let buyButtons = document.getElementsByClassName("buyBtn");
+                    let opponentId = currentPlayerId === 1 ? 2 : 1;
+                    let opponentPieces = document.getElementsByClassName(`p${opponentId}`);
+                    for (let i=0; i<opponentPieces.length-1; i++) {
+                        // If property unavailable
+                        if (buyButtons[i].dataset.id == newPlayerSpace && buyButtons[i].style.display == "none" && opponentPieces[i].style.display == "none") {
                             $(".endTurn").click();
                         }
-                    } 
+                        // Pickpocket
+                        else if (opponentPieces[i].dataset.id == newPlayerSpace && opponentPieces[i].style.display == "block") {
+                            pickpocket();
+                        } 
+                    }
                 }
+
 
                 // End turn if don't want to purchase
                 $(".endTurn").off().on("click", function() {
@@ -124,6 +144,7 @@ $(function() {
                         currentPlayerId = 1;
                     }
                     $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
+                    console.log("Ended turn");
                 })
 
                 // If player decides to buy this property
@@ -150,6 +171,7 @@ $(function() {
                                 data: {owned: true, PlayerId: currentPlayerId},
                                 url: "/api/property/" + id
                             }).then(function() {
+                                let buyButtons = document.getElementsByClassName("buyBtn");
                                 //Buy button disappear for this property
                                 for (let i=0; i<buyButtons.length; i++) {
                                     if (buyButtons[i].dataset.id == newPlayerSpace) {
@@ -175,17 +197,14 @@ $(function() {
                                         }
                                     }
 
+                                    console.log(`Player ${currentPlayerId} purchased a property!`);
+
                                     //Display updated money and number of props in stats
                                     $(`#money${currentPlayerId}`).text(`Money: $${newMoney}`);
                                     $(`#prop${currentPlayerId}`).text(`Number of Properties: ${count}`);
 
                                     // Update player turn
-                                    if (currentPlayerId === 1) {
-                                        currentPlayerId = 2;
-                                    } else {
-                                        currentPlayerId = 1;
-                                    }
-                                    $("#turn").html(`<h4>Ready Player ${currentPlayerId}<h4>`);
+                                    $(".endTurn").click();
                                     
                                     // End game if all properties sold
                                     let endCount = 0;
@@ -207,14 +226,15 @@ $(function() {
 
         //Pickpocket
         function pickpocket() {
+            currentPlayerId = currentPlayerId === 1 ? 2 : 1;
             $.ajax("/api/players/" + currentPlayerId, {
                 type: "GET"
             }).then(function(playerRes) {
                 let playerMoney = parseInt(playerRes.money);
+                let playerSpace = playerRes.currentSpace;
     
                 let opponentId = currentPlayerId === 1 ? 2 : 1;
-                console.log(`Player ${currentPlayerId} pickpocketed Player ${opponentId}!`);
-        
+                
                 //Get request for opponent's money
                 $.ajax("/api/players/" + opponentId, {
                     type: "GET",
@@ -224,7 +244,8 @@ $(function() {
                     let stolenAmt = Math.floor(oppMoney/10);
                     oppMoney -= parseInt(stolenAmt);
                     playerMoney += parseInt(stolenAmt);
-                        
+                    
+                    console.log(`Player ${currentPlayerId} pickpocketed $${stolenAmt} from Player ${opponentId}!`);
                     //Update opponent's money
                     $.ajax({
                         type: "PUT",
@@ -241,9 +262,6 @@ $(function() {
                     //Update money in stats
                     $(`#money${opponentId}`).text(`Money: $${oppMoney}`);
                     $(`#money${currentPlayerId}`).text(`Money: $${playerMoney}`);
-
-                    let buyButtons = document.getElementsByClassName("buyBtn");
-
                 })
             })
         }

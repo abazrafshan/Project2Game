@@ -20,7 +20,7 @@
   "homepage": "https://github.com/abazrafshan/Project2Game#readme",
   "dependencies": {
     "compression": "^1.7.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-handlebars": "^4.0.4",
     "mysql2": "^2.1.0",
     "sequelize": "^5.21.11"
